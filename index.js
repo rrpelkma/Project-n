@@ -40,47 +40,37 @@ app.post('/webhook/', function (req, res) {
 				//sendGenericMessage(sender)
 				continue
 			}
-			if(text.includes("kaart")){ 
-			sendTextMessage(sender, "Leuk dat je kaartjes wil bestellen, waar wil je naartoe? ")
+			if(text.includes("flow festival")){
+				sendTextMessage(sender, "Leuk dat je naar het flow festival wil! Wat voor kaartjes zou je willen?")
+				sendGenericMessage(sender)
+			}
+			else if(text.includes("kaart")){ 
+				sendTextMessage(sender, "Ik wil graag kaartjes voor je bestellen, probeer eens het flow festival!")
 			}
 			else if(text.includes("ticket")){ 
-			sendTextMessage(sender, "Leuk dat je tickets wil bestellen, waar wil je naartoe? ")
+				sendTextMessage(sender, "Ik wil graag tickets voor je bestellen, probeer eens het flow festival!")
 			}
 			else if(text.includes("bewijs")){ 
-			sendTextMessage(sender, "Leuk dat je kaartjes wil bestellen, waar wil je naartoe? ")
-			}
-			else if(text.includes("kaart" && "festival")){ 
-			sendTextMessage(sender, "Leuk dat je naar een festival wil! Wat voor kaartjes wil je?")
-			sendGenericMessage(sender)
-			}
-			else if(text.includes("ticket" && "festival")){
-				sendTextMessage(sender, "Leuk dat je naar een festival wil! Wat voor kaartjes wil je?")
-				sendGenericMessage(sender)
-			}
-			else if(text.includes("bewijs" && "festival")){
-				sendTextMessage(sender, "Leuk dat je naar een festival wil! Wat voor kaartjes wil je?")
-				sendGenericMessage(sender)
-			}
-			else if(text.includes("Wat kan je")){
-				sendTextMessage(sender, "Ik kan je helpen om kaartjes te bestellen voor een festival !")
+				sendTextMessage(sender, "Ik wil graag kaartjes voor je bestellen, probeer eens het flow festival!")
 			}
 			else if(text.includes("H")){
-				sendTextMessage(sender, "Hoi! Wat kan ik voor je doen?")
+				sendTextMessage(sender, "Hoi, wat kan ik voor je doen?")
 			}
 			else{
 				sendTextMessage(sender, "Sorry, ik begrijp je niet helemaal, probeer eens kaartjes te bestellen! ")
 			}
-			}
+		}
 		if (event.postback) {
 			let text = JSON.stringify(event.postback)
+			sendTextMessage(sender, "Hoe veel kaartjes wil je bestellen? Je kan er maximaal 5 per persoon bestellen!")
+			sendGeneric3Message(sender)
 			//sendTextMessage(sender, "Je bestelling is ontvangen! Als je via de onderstaande link betaalt sturen we ze direct naar je toe.")
-			sendGeneric2Message(sender)
+			//sendGeneric2Message(sender)
 			/*if (res.sendStatus(200) = true){ 
 			sendGeneric3Message(sender)
 			}*/
 			continue
 		}
-		
 	}
 	res.sendStatus(200)
 })
@@ -134,25 +124,9 @@ function sendGenericMessage(sender) {
 
 						"type": "postback",
 
-						"title": "1 Regular",
+						"title": "Regular tickets!",
 
-						"payload": "Leuk dat je één Regular ticket wil kopen!"
-
-					}, {
-
-						"type": "postback",
-
-						"title": "2 Regular",
-
-						"payload": "Leuk dat je 2 Regular tickets wil kopen!"
-
-					},{
-						
-						"type": "postback",
-
-						"title": "3 Regular",
-
-						"payload": "Leuk dat je 3 Regular tickets wil kopen!"
+						"payload": "Leuk dat je Regular tickets wil kopen!"
 					}],
 
 				}, {
@@ -167,28 +141,12 @@ function sendGenericMessage(sender) {
 
 						"type": "postback",
 
-						"title": "1 VIP",
+						"title": "VIP tickets!",
 
-						"payload": "Leuk dat je één VIP ticket wil kopen!",
-
-					},	{
-
-						"type": "postback",
-
-						"title": "2 VIP",
-
-						"payload": "Leuk dat je 2 VIP tickets wil kopen!",
-
-					},{
-
-						"type": "postback",
-
-						"title": "3 VIP",
-
-						"payload": "Leuk dat je 3 VIP tickets wil kopen!",
+						"payload": "Leuk dat je VIP tickets wil kopen!",
 
 					}],
-
+					
 				}]
 
 			}
@@ -243,7 +201,7 @@ function sendGeneric2Message(sender) {
 
 				"elements": [{
 
-					"title": "Je bestelling is ontvangen!",
+					"title": "Alleen nog afrekenen en je tickets zijn binnen!",
 
 					"subtitle": "Klik op de onderstaande knop om te betalen!",
 
@@ -298,6 +256,148 @@ function sendGeneric2Message(sender) {
 	})
 
 }
+
+/*function sendQuickReply(sender) {
+	let messageData = { "recipient":{
+    "id":"USER_ID"
+  },
+  "message":{
+    "text":"Pick a color:",
+    "quick_replies":[
+      {
+        "content_type":"text",
+        "title":"Red",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+      },
+      {
+        "content_type":"text",
+        "title":"Green",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+      }
+    ]
+  }
+}
+	request({
+		url: 'https://graph.facebook.com/v2.6/me/messages',
+		qs: {access_token:token},
+		method: 'POST',
+		json: {
+			recipient: {id:sender},
+			message: messageData,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error sending messages: ', error)
+		} else if (response.body.error) {
+			console.log('Error: ', response.body.error)
+		}
+	})
+}*/
+
+function sendGeneric3Message(sender) {
+
+	let messageData = {
+
+		"attachment": {
+
+			"type": "template",
+
+			"payload": {
+
+				"template_type": "generic",
+
+				"elements": [{
+
+					"title": "Aantal kaartjes",
+
+					"subtitle": "Ga naar rechts voor een grotere kaartkeuze!",
+
+					//"image_url": "https://www.visitljubljana.com/assets/gallery/flow.jpg",
+
+					"buttons": [{
+
+						"type": "postback",
+
+						"title": "1",
+
+						"payload": "Leuk dat je Regular tickets wil kopen!" //Hier kan link van payments??
+					},{
+						"type": "postback",
+
+						"title": "2",
+
+						"payload": "Leuk dat je Regular tickets wil kopen!" //Hier kan link van payments??
+					},{
+						"type": "postback",
+
+						"title": "3",
+
+						"payload": "Leuk dat je Regular tickets wil kopen!" //Hier kan link van payments??
+					}],
+
+				}, {
+
+					"title": "Aantal kaartjes",
+
+					"subtitle": "Ga naar links voor een kleinere kaartkeuze!",
+
+					//"image_url": "https://www.visitljubljana.com/assets/gallery/flow.jpg",
+
+					"buttons": [{
+
+						"type": "postback",
+
+						"title": "4",
+
+						"payload": "Leuk dat je VIP tickets wil kopen!",
+					},{
+						"type": "postback",
+
+						"title": "5",
+
+						"payload": "Leuk dat je Regular tickets wil kopen!" //Hier kan link van payments??
+					}],
+					
+				}]
+
+			}
+
+		}
+
+	}
+
+	request({
+
+		url: 'https://graph.facebook.com/v2.6/me/messages',
+
+		qs: {access_token:token},
+
+		method: 'POST',
+
+		json: {
+
+			recipient: {id:sender},
+
+			message: messageData,
+
+		}
+
+	}, function(error, response, body) {
+
+		if (error) {
+
+			console.log('Error sending messages: ', error)
+
+		} else if (response.body.error) {
+
+			console.log('Error: ', response.body.error)
+
+		}
+
+	})
+
+}
+
 
 function sendButtonMessage(sender, text){
 	let messagedata = {
